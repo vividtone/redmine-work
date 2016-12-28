@@ -42,25 +42,40 @@ module Redmine
       end
     end
 
-    module CodeRay
-      require 'coderay'
+    module Rouge
+      require 'rouge'
 
       class << self
         # Highlights +text+ as the content of +filename+
         # Should not return line numbers nor outer pre tag
         def highlight_by_filename(text, filename)
-          language = ::CodeRay::FileType[filename]
-          language ? ::CodeRay.scan(text, language).html(:break_lines => true) : ERB::Util.h(text)
+          lexer =::Rouge::Lexer.guess_by_filename(filename)
+          ::Rouge.highlight(text, lexer, 'html')
         end
 
         # Highlights +text+ using +language+ syntax
         # Should not return outer pre tag
         def highlight_by_language(text, language)
-          ::CodeRay.scan(text, language).html(:wrap => :span)
+          lexer =
+            ::Rouge::Lexer.find(convert_alias(language.to_s.downcase)) || ::Rouge::Lexers::PlainText
+          ::Rouge.highlight(text, lexer, 'html')
+        end
+
+        private
+        def convert_alias(language)
+          {
+            'delphi' => 'pascal',
+            'cplusplus' => 'cpp',
+            'ecmascript' => 'javascript',
+            'ecma_script' => 'javascript',
+            'java_script' => 'javascript',
+            'irb' => 'ruby',
+            'xhtml' => 'html'
+          }.fetch(language, language)
         end
       end
     end
   end
 
-  SyntaxHighlighting.highlighter = 'CodeRay'
+  SyntaxHighlighting.highlighter = 'Rouge'
 end
