@@ -1016,6 +1016,22 @@ EXPECTED
     assert_equal expected.gsub(%r{[\r\n\t]}, ''), textilizable(raw).gsub(%r{[\r\n\t]}, '')
   end
 
+  def test_syntax_highlight_php_without_open_tag
+    raw = <<-RAW
+<pre><code class="php">
+// Hello
+echo "Hello World!";
+</code></pre>
+RAW
+    expected = <<-EXPECTED
+<pre><code class="php syntaxhl"><span class="c1">// Hello
+</span><span class="k">echo</span> <span class="s2">"Hello World!"</span><span class="p">;</span>
+</code></pre>
+EXPECTED
+
+    assert_equal expected.gsub(%r{[\r\n\t]}, ''), textilizable(raw).gsub(%r{[\r\n\t]}, '')
+  end
+
   def test_to_path_param
     assert_equal 'test1/test2', to_path_param('test1/test2')
     assert_equal 'test1/test2', to_path_param('/test1/test2/')

@@ -50,28 +50,35 @@ module Redmine
         # Should not return line numbers nor outer pre tag
         def highlight_by_filename(text, filename)
           lexer =::Rouge::Lexer.guess_by_filename(filename)
-          ::Rouge.highlight(text, lexer, 'html')
+          ::Rouge.highlight(text, lexer, ::Rouge::Formatters::HTML)
         end
 
         # Highlights +text+ using +language+ syntax
         # Should not return outer pre tag
         def highlight_by_language(text, language)
-          lexer =
-            ::Rouge::Lexer.find(convert_alias(language.to_s.downcase)) || ::Rouge::Lexers::PlainText
-          ::Rouge.highlight(text, lexer, 'html')
+          lexer = ::Rouge::Lexer.find(convert_alias(language.downcase))
+          if lexer == ::Rouge::Lexers::PHP
+            start_inline = text !~ /<\?(php|=)/ ? true : false
+            lexer = ::Rouge::Lexers::PHP.new(:start_inline => start_inline)
+          end
+          lexer ||= ::Rouge::Lexers::PlainText
+          ::Rouge.highlight(text, lexer, ::Rouge::Formatters::HTML)
         end
 
         private
+        LANG_ALIASES =
+        {
+          'delphi' => 'pascal',
+          'cplusplus' => 'cpp',
+          'ecmascript' => 'javascript',
+          'ecma_script' => 'javascript',
+          'java_script' => 'javascript',
+          'irb' => 'ruby',
+          'xhtml' => 'html'
+        }
+
         def convert_alias(language)
-          {
-            'delphi' => 'pascal',
-            'cplusplus' => 'cpp',
-            'ecmascript' => 'javascript',
-            'ecma_script' => 'javascript',
-            'java_script' => 'javascript',
-            'irb' => 'ruby',
-            'xhtml' => 'html'
-          }.fetch(language, language)
+          LANG_ALIASES.fetch(language, language)
         end
       end
     end
