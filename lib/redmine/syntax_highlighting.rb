@@ -45,12 +45,30 @@ module Redmine
     module Rouge
       require 'rouge'
 
+      # Customized formatter based on Rouge::Formatters::HTMLLinewise
+      # Syntax highlighting is completed within each line.
+      class CustomHTMLLinewise < ::Rouge::Formatter
+        def initialize(formatter)
+          @formatter = formatter
+        end
+
+        def stream(tokens, &b)
+          token_lines(tokens) do |line|
+            line.each do |tok, val|
+              yield @formatter.span(tok, val)
+            end
+            yield "\n"
+          end
+        end
+      end
+
       class << self
         # Highlights +text+ as the content of +filename+
         # Should not return line numbers nor outer pre tag
         def highlight_by_filename(text, filename)
           lexer =::Rouge::Lexer.guess_by_filename(filename)
-          ::Rouge.highlight(text, lexer, ::Rouge::Formatters::HTML)
+          html_formatter = ::Rouge::Formatters::HTML.new
+          ::Rouge.highlight(text, lexer, CustomHTMLLinewise.new(html_formatter))
         end
 
         # Highlights +text+ using +language+ syntax
