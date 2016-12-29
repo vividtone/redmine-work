@@ -18,17 +18,15 @@
         overflow-y: hidden;
     }
     a.new { color: #b73535; }
-
-    .syntaxhl .class { color:#258; font-weight:bold }
-    .syntaxhl .comment  { color:#385; }
-    .syntaxhl .delimiter { color:black }
-    .syntaxhl .function { color:#06B; font-weight:bold }
-    .syntaxhl .inline { background-color: hsla(0,0%,0%,0.07); color: black }
-    .syntaxhl .inline-delimiter { font-weight: bold; color: #666 }
-    .syntaxhl .instance-variable { color:#33B }
-    .syntaxhl .keyword { color:#939; font-weight:bold }
-    .syntaxhl .string .content { color: #46a }
-    .syntaxhl .string .delimiter { color:#46a }
+    .syntaxhl .c1 { color: #888888 }
+    .syntaxhl .k { color: #008800; font-weight: bold }
+    .syntaxhl .nc { color: #BB0066; font-weight: bold }
+    .syntaxhl .nf { color: #0066BB; font-weight: bold }
+    .syntaxhl .nb { color: #007020 }
+    .syntaxhl .vi { color: #3333BB }
+    .syntaxhl .o { color: #333333 }
+    .syntaxhl .s2 { background-color: #fff0f0 }
+    .syntaxhl .si { background-color: #eeeeee }
 </style>
 </head>
 
@@ -301,7 +299,9 @@ To go live, all you need to add is a database and a web server.
 
     <h2><a name="13" class="wiki-page"></a>コードハイライト</h2>
 
-    <p>Redmineのコードハイライトは <a href="http://coderay.rubychan.de/" class="external">CodeRay</a> という、Rubyで記述された高速なライブラリを使用しています。現時点では c, clojure, cpp (c++, cplusplus), css, delphi (pascal), diff (patch), erb (eruby, rhtml), go, groovy, haml, html (xhtml), java, javascript (ecmascript, ecma_script, java_script, js), json, lua, php, python, ruby (irb), sass, sql, taskpaper, text (plain, plaintext), xml, yaml (yml) に対応しています。括弧内の名前はコードハイライトの指定時に利用できる別名です。</p>
+    <p>Default code highlightment relies on <a href="http://rouge.jneen.net/" class="external">Rouge</a>, a fast syntax highlighting library written completely in Ruby. It currently supports c, clojure, cpp (c++, cplusplus), css, delphi (pascal), diff (patch), erb (eruby, rhtml), go, groovy, haml, html (xhtml), java, javascript (ecmascript, ecma_script, java_script, js), json, lua, php, python, ruby (irb), sass, sql, taskpaper, text (plain, plaintext), xml, yaml (yml) plus more than 100+ languages, where the names inside parentheses are aliases.</p>
+
+    <p>A list of all supported languages can be found at <a href="https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers" class="external">https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers</a>.</p>
 
     <p>Wiki記法に対応している箇所であればどこでも以下の記述によりコードハイライトが利用できます (言語名・別名では大文字・小文字は区別されません):</p>
 
@@ -313,16 +313,16 @@ To go live, all you need to add is a database and a web server.
 
     <p>表示例:</p>
 
-<pre><code class="ruby syntaxhl"><span class="CodeRay"><span class="comment"># The Greeter class</span>
-<span class="keyword">class</span> <span class="class">Greeter</span>
-  <span class="keyword">def</span> <span class="function">initialize</span>(name)
-    <span class="instance-variable">@name</span> = name.capitalize
-  <span class="keyword">end</span>
+<pre><code class="ruby syntaxhl"><span class="c1"># The Greeter class</span>
+<span class="k">class</span> <span class="nc">Greeter</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span>
+  <span class="k">end</span>
 
-  <span class="keyword">def</span> <span class="function">salute</span>
-    puts <span class="string"><span class="delimiter">"</span><span class="content">Hello </span><span class="inline"><span class="inline-delimiter">#{</span><span class="instance-variable">@name</span><span class="inline-delimiter">}</span></span><span class="content">!</span><span class="delimiter">"</span></span>
-  <span class="keyword">end</span>
-<span class="keyword">end</span></span></code>
-</pre>
+  <span class="k">def</span> <span class="nf">salute</span>
+    <span class="nb">puts</span> <span class="s2">"Hello </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">!"</span> 
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
 </body>
 </html>
