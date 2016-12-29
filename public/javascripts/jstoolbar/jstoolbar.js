@@ -7,12 +7,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * DotClear is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with DotClear; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -53,16 +53,16 @@ function jsToolBar(textarea) {
     var This = this;
     this.handle.addEventListener('mousedown',function(event) { dragStart.call(This,event); },false);
     // fix memory leak in Firefox (bug #241518)
-    window.addEventListener('unload',function() { 
+    window.addEventListener('unload',function() {
       var del = This.handle.parentNode.removeChild(This.handle);
       delete(This.handle);
     },false);
-    
+
     this.editor.parentNode.insertBefore(this.handle,this.editor.nextSibling);
   }
-  
+
   this.context = null;
-  this.toolNodes = {}; // lorsque la toolbar est dessinée , cet objet est garni 
+  this.toolNodes = {}; // lorsque la toolbar est dessinée , cet objet est garni
                        // de raccourcis vers les éléments DOM correspondants aux outils.
 }
 
@@ -110,7 +110,7 @@ jsSpace.prototype.draw = function() {
   if (this.width) span.style.marginRight = this.width+'px';
 
   return span;
-} 
+}
 
 function jsCombo(title, options, scope, fn, className) {
   this.title = title || null;
@@ -136,7 +136,7 @@ jsCombo.prototype.draw = function() {
 
   var This = this;
   select.onchange = function() {
-    try { 
+    try {
       This.fn.call(This.scope, this.value);
     } catch (e) { alert(e); }
 
@@ -152,7 +152,7 @@ jsToolBar.prototype = {
   mode: 'wiki',
   elements: {},
   help_link: '',
-  
+
   getMode: function() {
     return this.mode;
   },
@@ -375,10 +375,10 @@ jsToolBar.prototype.resizeDragStop = function(event) {
 
 /* Code highlighting menu */
 jsToolBar.prototype.precodeMenu = function(fn){
-  var codeRayLanguages = ["c", "clojure", "cpp", "css", "delphi", "diff", "erb", "go", "groovy", "haml", "html", "java", "javascript", "json", "lua", "php", "python", "ruby", "sass", "sql", "taskpaper", "text", "xml", "yaml"];
+  var hlLanguages = ["c", "clojure", "cpp", "css", "delphi", "diff", "erb", "go", "groovy", "haml", "html", "java", "javascript", "json", "lua", "php", "python", "ruby", "sass", "sql", "text", "xml", "yaml"];
   var menu = $("<ul style='position:absolute;'></ul>");
-  for (var i = 0; i < codeRayLanguages.length; i++) {
-    $("<li></li>").text(codeRayLanguages[i]).appendTo(menu).mousedown(function(){
+  for (var i = 0; i < hlLanguages.length; i++) {
+    $("<li></li>").text(hlLanguages[i]).appendTo(menu).mousedown(function(){
       fn($(this).text());
     });
   }
