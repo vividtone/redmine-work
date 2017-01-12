@@ -24,7 +24,8 @@ Available options:
   * project  => id or identifier of project (defaults to all projects)
   * users    => comma separated list of user/group ids who should be reminded
   * version  => name of target version for filtering issues (defaults to none)
-  # recipients => array of recipients (available values = 'assignee' and 'watcher', default to 'assignee')
+  * recipients => comma separated list of recipient types
+    (default to 'assignee', available values are 'assignee' and 'watcher')
 
 Example:
   rake redmine:send_reminders days=7 users="1,23, 56" RAILS_ENV="production"
