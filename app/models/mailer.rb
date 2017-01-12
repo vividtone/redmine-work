@@ -376,6 +376,7 @@ class Mailer < ActionMailer::Base
   # * :project  => id or identifier of project to process (defaults to all projects)
   # * :users    => array of user/group ids who should be reminded
   # * :version  => name of target version for filtering issues (defaults to none)
+  # * :recipients => array of recipients (available values = 'assignee' and 'watcher', default to 'assignee')
   def self.reminders(options={})
     days = options[:days] || 7
     project = options[:project] ? Project.find(options[:project]) : nil
@@ -385,6 +386,8 @@ class Mailer < ActionMailer::Base
       raise ActiveRecord::RecordNotFound.new("Couldn't find Version with named #{options[:version]}")
     end
     user_ids = options[:users]
+    racipients = options[:recipients]
+    recipients = [:assignee] if recipients.blank?
 
     scope = Issue.open.where("#{Issue.table_name}.assigned_to_id IS NOT NULL" +
       " AND #{Project.table_name}.status = #{Project::STATUS_ACTIVE}" +
@@ -394,19 +397,31 @@ class Mailer < ActionMailer::Base
     scope = scope.where(:project_id => project.id) if project
     scope = scope.where(:fixed_version_id => target_version_id) if target_version_id.present?
     scope = scope.where(:tracker_id => tracker.id) if tracker
-    issues_by_assignee = scope.includes(:status, :assigned_to, :project, :tracker).
-                              group_by(&:assigned_to)
-    issues_by_assignee.keys.each do |assignee|
-      if assignee.is_a?(Group)
-        assignee.users.each do |user|
-          issues_by_assignee[user] ||= []
-          issues_by_assignee[user] += issues_by_assignee[assignee]
+    issues = scope.includes(:status, :assigned_to, :project, :tracker)
+    issues_by_recipient = {}
+
+    if recipients.include?(:assignee)
+      issues_by_recipient = issues.group_by(&:assigned_to)
+      issues_by_recipient.keys.each do |assignee|
+        if assignee.is_a?(Group)
+          assignee.users.each do |user|
+            issues_by_recipient[user] ||= []
+            issues_by_recipient[user] += issues_by_recipient[assignee]
+          end
+        end
+      end
+    end
+    if recipients.include?(:watcher)
+      issues.each do |issue|
+        issues.notified_watchers.each do |watcher|
+          issues_by_recipient[watcher] ||= []
+          issues_by_recipient[watcher] |= issue
         end
       end
     end
 
-    issues_by_assignee.each do |assignee, issues|
-      reminder(assignee, issues, days).deliver if assignee.is_a?(User) && assignee.active?
+    issues_by_recipient.each do |recipient, issues|
+      reminder(recipient, issues, days).deliver if recipient.is_a?(User) && recipient.active?
     end
   end
 

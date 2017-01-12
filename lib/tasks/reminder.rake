@@ -24,6 +24,7 @@ Available options:
   * project  => id or identifier of project (defaults to all projects)
   * users    => comma separated list of user/group ids who should be reminded
   * version  => name of target version for filtering issues (defaults to none)
+  # recipients => array of recipients (available values = 'assignee' and 'watcher', default to 'assignee')
 
 Example:
   rake redmine:send_reminders days=7 users="1,23, 56" RAILS_ENV="production"
@@ -36,7 +37,10 @@ namespace :redmine do
     options[:project] = ENV['project'] if ENV['project']
     options[:tracker] = ENV['tracker'].to_i if ENV['tracker']
     options[:users] = (ENV['users'] || '').split(',').each(&:strip!)
-    options[:version] = ENV['version'] if ENV['version'] 
+    options[:version] = ENV['version'] if ENV['version']
+    option[:recipients] =
+      ENV['recipients'].to_s.downcase.split(',').map(&:strip).map(&:to_sym) |
+      [:assignee, :watcher]
 
     Mailer.with_synched_deliveries do
       Mailer.reminders(options)
