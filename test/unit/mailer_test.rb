@@ -649,7 +649,7 @@ class MailerTest < ActiveSupport::TestCase
   end
 
   def test_reminders_with_version_option
-    with_settings :default_language => 'en' do 
+    with_settings :default_language => 'en' do
       version = Version.generate!(:name => 'Acme', :project_id => 1)
       Issue.generate!(:assigned_to => User.find(2), :due_date => 5.days.from_now)
       Issue.generate!(:assigned_to => User.find(3), :due_date => 5.days.from_now, :fixed_version => version)
@@ -660,6 +660,27 @@ class MailerTest < ActiveSupport::TestCase
 
       mail = last_email
       assert mail.bcc.include?('dlopper@somenet.foo')
+    end
+  end
+
+  def test_reminders_with_recipient_option
+    with_settings :default_language => 'en' do
+      # watched by jsmith
+      issues(:issues_003).add_watcher(users(:users_002))
+
+      Mailer.reminders(:days => 42, :recipients => [:assignee])
+      assert_equal 1, ActionMailer::Base.deliveries.size
+      assert last_email.bcc.include?('dlopper@somenet.foo')
+      ActionMailer::Base.deliveries.clear
+
+      Mailer.reminders(:days => 42, :recipients => [:watcher])
+      assert_equal 1, ActionMailer::Base.deliveries.size
+      assert last_email.bcc.include?('jsmith@somenet.foo')
+      ActionMailer::Base.deliveries.clear
+
+      Mailer.reminders(:days => 42, :recipients => [:assignee, :watcher])
+      assert_equal 2, ActionMailer::Base.deliveries.size
+      assert_equal %w(dlopper@somenet.foo jsmith@somenet.foo), ActionMailer::Base.deliveries.map(&:bcc).flatten.sort
     end
   end
 
