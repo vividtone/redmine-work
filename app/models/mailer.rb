@@ -389,8 +389,8 @@ class Mailer < ActionMailer::Base
     recipients = options[:recipients]
     recipients = [:assignee] if recipients.blank?
 
-    scope = Issue.open.where("#{Issue.table_name}.assigned_to_id IS NOT NULL" +
-      " AND #{Project.table_name}.status = #{Project::STATUS_ACTIVE}" +
+    scope = Issue.open.where(
+      "#{Project.table_name}.status = #{Project::STATUS_ACTIVE}" +
       " AND #{Issue.table_name}.due_date <= ?", days.day.from_now.to_date
     )
     scope = scope.where(:assigned_to_id => user_ids) if user_ids.present?
@@ -401,7 +401,8 @@ class Mailer < ActionMailer::Base
     issues_by_recipient = {}
 
     if recipients.include?(:assignee)
-      issues_by_recipient = issues.group_by(&:assigned_to)
+      issues_by_recipient =
+        issues.where('assigned_to_id IS NOT NULL').group_by(&:assigned_to)
       issues_by_recipient.keys.each do |assignee|
         if assignee.is_a?(Group)
           assignee.users.each do |user|
@@ -419,7 +420,6 @@ class Mailer < ActionMailer::Base
         end
       end
     end
-
     issues_by_recipient.each do |recipient, issues|
       reminder(recipient, issues, days).deliver if recipient.is_a?(User) && recipient.active?
     end

@@ -38,8 +38,8 @@ namespace :redmine do
     options[:tracker] = ENV['tracker'].to_i if ENV['tracker']
     options[:users] = (ENV['users'] || '').split(',').each(&:strip!)
     options[:version] = ENV['version'] if ENV['version']
-    option[:recipients] =
-      ENV['recipients'].to_s.downcase.split(',').map(&:strip).map(&:to_sym) |
+    options[:recipients] =
+      ENV['recipients'].to_s.downcase.split(',').map(&:strip).map(&:to_sym) &
       [:assignee, :watcher]
 
     Mailer.with_synched_deliveries do

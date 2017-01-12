@@ -665,8 +665,11 @@ class MailerTest < ActiveSupport::TestCase
 
   def test_reminders_with_recipient_option
     with_settings :default_language => 'en' do
-      # watched by jsmith
+      # assigned to dlopper, watched by jsmith
       issues(:issues_003).add_watcher(users(:users_002))
+      # assigned to nobody, watched by jsmith
+      Issue.generate!(:assigned_to => nil, :due_date => 5.days.from_now, :subject => 'Assigned to nobody').add_watcher(users(:users_002))
+      ActionMailer::Base.deliveries.clear
 
       Mailer.reminders(:days => 42, :recipients => [:assignee])
       assert_equal 1, ActionMailer::Base.deliveries.size
@@ -675,7 +678,10 @@ class MailerTest < ActiveSupport::TestCase
 
       Mailer.reminders(:days => 42, :recipients => [:watcher])
       assert_equal 1, ActionMailer::Base.deliveries.size
-      assert last_email.bcc.include?('jsmith@somenet.foo')
+      mail = last_email
+      assert mail.bcc.include?('jsmith@somenet.foo')
+      assert_mail_body_match 'Bug #3: Error 281 when updating a recipe', mail
+      assert_mail_body_match 'Assigned to nobody', mail
       ActionMailer::Base.deliveries.clear
 
       Mailer.reminders(:days => 42, :recipients => [:assignee, :watcher])
