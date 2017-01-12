@@ -376,7 +376,7 @@ class Mailer < ActionMailer::Base
   # * :project  => id or identifier of project to process (defaults to all projects)
   # * :users    => array of user/group ids who should be reminded
   # * :version  => name of target version for filtering issues (defaults to none)
-  # * :recipients => array of recipients (available values are :assignee and :watcher, default to :assignee)
+  # * :recipients => array of recipient types (available values are :assignee and :watcher, default to :assignee)
   def self.reminders(options={})
     days = options[:days] || 7
     project = options[:project] ? Project.find(options[:project]) : nil
