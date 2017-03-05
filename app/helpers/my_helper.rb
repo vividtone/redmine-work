@@ -98,6 +98,20 @@ module MyHelper
     Issue.visible.open.on_active_project.watched_by(User.current.id).recently_updated.limit(10)
   end
 
+  def issuequery_items(query_id)
+    query = IssueQuery.visible.find_by_id(query_id)
+
+    return query unless query
+
+    sort_array = query.sort_criteria.empty? ? [['id', 'desc']] : query.sort_criteria
+    sort_init(sort_array)
+    sort_update(query.sortable_columns, 'issues_index_sort')
+
+    issues = query.issues(:order => sort_clause, :limit => 10)
+
+    return query, issues
+  end
+
   def news_items
     News.visible.
       where(:project_id => User.current.projects.map(&:id)).

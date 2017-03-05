@@ -1,0 +1,40 @@
+<%
+query, issues = issuequery_items(settings[:query_id].to_i)
+visible_queries = IssueQuery.visible.sorted
+%>
+
+<div class="contextual">
+  <%= link_to_function l(:label_options), "$('#customquery-settings').toggle();", :class => 'icon-only icon-settings' %>
+</div>
+
+<h3>
+  <% if query %>
+  <%= link_to l(:label_issues_from_query, :query_name => query.name), {:controller => 'issues', :action => 'index', :project_id => query.project_id, :query_id => query} %>
+  (<%= query.issue_count %>)
+  <% else %>
+    <%= l(:label_issues_from_custom_query) %>
+  <% end %>
+</h3>
+
+<div id="customquery-settings" style="display:none;">
+  <%= form_tag({}, :remote => true) do %>
+    <div class="box">
+      <p>
+      <label>
+        <%= l(:label_query) %>
+        <%= select_tag 'settings[issuescustomquery][query_id]', content_tag("option") + options_from_collection_for_select(visible_queries, :id, :name, settings[:query_id]) %>
+      </label>
+      </p>
+    </div>
+    <p>
+      <%= submit_tag l(:button_save) %>
+      <%= link_to_function l(:button_cancel), "$('#customquery-settings').toggle();" %>
+    </p>
+  <% end %>
+</div>
+
+<% if query %>
+  <%= render :partial => 'issues/list_simple', :locals => { :issues => issues } %>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

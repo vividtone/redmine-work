@@ -19,7 +19,7 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class MyControllerTest < Redmine::ControllerTest
   fixtures :users, :email_addresses, :user_preferences, :roles, :projects, :members, :member_roles,
-  :issues, :issue_statuses, :trackers, :enumerations, :custom_fields, :auth_sources
+  :issues, :issue_statuses, :trackers, :enumerations, :custom_fields, :auth_sources, :queries
 
   def setup
     @request.session[:user_id] = 2
@@ -49,6 +49,58 @@ class MyControllerTest < Redmine::ControllerTest
       assert_select 'td.subject a[href="/issues/1"]'
       assert_select 'td.hours', :text => '2.50'
     end
+  end
+
+  def test_page_with_issues_from_custom_query_block
+    preferences = User.find(2).pref
+    preferences[:my_page_layout] = {'top' => ['issuescustomquery']}
+    preferences.save!
+
+    get :page
+    assert_response :success
+
+    assert_select 'h3', :text => 'Issues from custom query'
+
+    assert_select 'select[name=?]', 'settings[issuescustomquery][query_id]' do
+      assert_select 'option', 8
+      assert_select 'option', :text => ''
+      assert_select 'option[value="1"]', :text => 'Multiple custom fields query'
+      assert_select 'option[value="5"]', :text => 'Open issues by priority and tracker'
+      assert_select 'option[value="9"]', :text => 'Open issues grouped by list custom field'
+      assert_select 'option[value="6"]', :text => 'Open issues grouped by tracker'
+      assert_select 'option[value="8"]', :text => 'Private query for project 2'
+      assert_select 'option[value="4"]', :text => 'Public query for all projects'
+      assert_select 'option[value="7"]', :text => 'Public query for project 2'
+    end
+  end
+
+
+  def test_update_page_with_blank_preferences
+    user = User.generate!(:language => 'en')
+    @request.session[:user_id] = user.id
+
+    xhr :post, :update_page, :settings => {'timelog' => {'days' => '14'}}
+    assert_response :success
+    assert_include '$("#block-timelog").html(', response.body
+    assert_include '14 days', response.body
+
+    assert_equal({:days => "14"}, user.reload.pref.my_page_settings('timelog'))
+  end
+
+
+  def test_page_with_issues_from_custom_query_block_with_selected_query
+    preferences = User.find(2).pref
+    preferences[:my_page_layout] = {'top' => ['issuescustomquery']}
+    preferences[:my_page_settings] = {'issuescustomquery' => {:query_id => '5'}}
+    preferences.save!
+
+    get :page
+    assert_response :success
+    assert_select 'select[name=?]', 'settings[issuescustomquery][query_id]' do
+      assert_select 'option', 8
+      assert_select 'option[selected=selected][value="5"]', :text => 'Open issues by priority and tracker'
+    end
+    assert_select 'tr.issue', 10
   end
 
   def test_page_with_all_blocks

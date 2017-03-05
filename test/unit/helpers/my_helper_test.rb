@@ -20,7 +20,7 @@ require File.expand_path('../../../test_helper', __FILE__)
 class MyHelperTest < Redmine::HelperTest
   include ERB::Util
   include MyHelper
-
+  include SortHelper
 
   fixtures :projects, :trackers, :issue_statuses, :issues,
            :enumerations, :users, :issue_categories,
@@ -45,5 +45,13 @@ class MyHelperTest < Redmine::HelperTest
     assert_not_nil entry.issue
 
     assert_include entry, timelog_items.first
+  end
+
+  def test_issuequery_items_should_return_query_and_ten_sorted_issues
+    User.current = User.find(2)
+    query, issues = issuequery_items(5)
+
+    assert_equal query.name, "Open issues by priority and tracker"
+    assert_equal [7, 9, 10, 14, 2, 1, 3, 4, 5, 6], issues.map(&:id)
   end
 end

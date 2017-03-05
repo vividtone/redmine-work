@@ -27,6 +27,8 @@ class MyController < ApplicationController
   helper :issues
   helper :users
   helper :custom_fields
+  helper :queries
+  helper :sort
 
   def index
     page

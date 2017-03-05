@@ -1014,6 +1014,8 @@ en:
   label_font_default: Default font
   label_font_monospace: Monospaced font
   label_font_proportional: Proportional font
+  label_issues_from_custom_query: Issues from custom query
+  label_issues_from_query: "Issues from query: %{query_name}"
 
   button_login: Login
   button_submit: Submit
