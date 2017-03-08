@@ -34,7 +34,7 @@ li.change .copied-from:before { content: " - "}
 #changes-legend { float: right; font-size: 0.8em; margin: 0; }
 #changes-legend li { float: left; background-position: 5px 0; }
 
-table.filecontent { border: 1px solid #e2e2e2;  border-collapse: collapse; width:98%; background-color: #fafafa; }
+table.filecontent { border: 1px solid #e2e2e2;  border-collapse: collapse; width:98%; background-color: #fefefe; }
 table.filecontent tbody {font-family:Consolas, Menlo, "Liberation Mono", Courier, monospace; font-size:12px;}
 table.filecontent th { border: 1px solid #e2e2e2; background-color: #eee; }
 table.filecontent th.filename { background-color: #e4e4d4; text-align: left; padding:5px;}
@@ -102,7 +102,7 @@ table.annotate td.author {
     background: inherit;
 }
 
-table.annotate td.line-code { background-color: #fafafa; }
+table.annotate td.line-code { background-color: #fefefe; }
 
 div.action_M { background: #fd8 }
 div.action_D { background: #f88 }

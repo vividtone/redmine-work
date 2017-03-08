@@ -2,7 +2,7 @@ html {overflow-y:scroll;}
 body { font-family: Verdana, sans-serif; font-size: 12px; color:#333; margin: 0; padding: 0; min-width: 900px; }
 
 h1, h2, h3, h4 {font-family: "Trebuchet MS", Verdana, sans-serif;padding: 2px 10px 1px 0px;margin: 0 0 10px 0;}
-#content h1, h2, h3, h4 {color: #555;}
+#content h1, h2, h3, h4 {color: #333;}
 h2, .wiki h1 {font-size: 20px;}
 h3, .wiki h2 {font-size: 16px;}
 h4, .wiki h3 {font-size: 13px;}
@@ -80,11 +80,11 @@ pre, code {font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;}
 #admin-menu ul {margin: 0;  padding: 0;}
 #admin-menu li {margin: 0;  padding: 0 0 6px 0; list-style-type:none;}
 
-#main {background-color:#EEEEEE;}
+#main {background-color:#f2f2f2;}
 
 #sidebar{ float: right; width: 22%; position: relative; z-index: 9; padding: 0; margin: 0;}
 * html #sidebar{ width: 22%; }
-#sidebar h3{ font-size: 14px; margin-top:14px; color: #666;  }
+#sidebar h3{ font-size: 14px; margin-top:14px; color: #333;  }
 #sidebar hr{ width: 100%; margin: 0 auto; height: 1px; background: #ccc; border: 0; }
 * html #sidebar hr{ width: 95%; position: relative; left: -6px; color: #ccc; }
 #sidebar .contextual { margin-right: 1em; }
@@ -411,7 +411,7 @@ span.add_attachment a {padding-left:16px; background: url(../images/bullet_add.p
 .box{
   padding:6px;
   margin-bottom: 10px;
-  background-color:#f6f6f6;
+  background-color:#f9f9f9;
   color:#505050;
   line-height:1.5em;
   border: 1px solid #e4e4e4;
@@ -447,7 +447,7 @@ textarea.wiki-edit {width:99%; resize:vertical;}
 body.textarea-monospace textarea.wiki-edit {font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace; font-size: 12px;}
 body.textarea-proportional textarea.wiki-edit {font-family: Verdana, sans-serif; font-size: 12px;}
 li p {margin-top: 0;}
-div.issue {background:#ffffdd; padding:6px; margin-bottom:6px; border: 1px solid #d7d7d7; border-radius:3px;}
+div.issue {background:#ffffe6; padding:6px; margin-bottom:6px; border: 1px solid #d7d7d7; border-radius:3px;}
 p.breadcrumb { font-size: 0.9em; margin: 4px 0 4px 0;}
 p.subtitle { font-size: 0.9em; margin: -6px 0 12px 0; font-style: italic; }
 p.footnote { font-size: 0.9em; margin-top: 0px; margin-bottom: 0px; }
@@ -973,7 +973,7 @@ p.progress-info {clear: left; font-size: 80%; margin-top:-4px; color:#777;}
   padding:4px 6px 4px 6px;
   border: 1px solid #ccc;
   border-bottom: 1px solid #bbbbbb;
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
   color:#999;
   font-weight:bold;
   border-top-left-radius:3px;
@@ -1039,7 +1039,7 @@ button.tab-left.disabled, button.tab-right.disabled {
 
 .text-diff {
   padding: 1em;
-  background-color:#f6f6f6;
+  background-color:#fafafa;
   color:#505050;
   border: 1px solid #e4e4e4;
 }
