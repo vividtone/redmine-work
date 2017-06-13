@@ -238,12 +238,7 @@ module Redmine
             end
           end
           begin
-            mode = "r+"
-            IO.popen(cmd, mode) do |io|
-              io.set_encoding("ASCII-8BIT") if io.respond_to?(:set_encoding)
-              io.close_write unless options[:write_stdin]
-              block.call(io) if block_given?
-            end
+            Redmine::Utils::Shell.shellout(cmd, options, &block)
           ## If scm command does not exist,
           ## Linux JRuby 1.6.2 (ruby-1.8.7-p330) raises java.io.IOException
           ## in production environment.

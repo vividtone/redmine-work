@@ -82,6 +82,20 @@ module Redmine
           shell_quote(command)
         end
       end
+
+      # Executes the given command through IO.popen and yields an IO object
+      # representing STDIN / STDOUT
+      #
+      # Due to how popen works the command will be executed directly without
+      # involving the shell if cmd is an array.
+      def shellout(cmd, options = {}, &block)
+        mode = "r+"
+        IO.popen(cmd, mode) do |io|
+          io.set_encoding("ASCII-8BIT") if io.respond_to?(:set_encoding)
+          io.close_write unless options[:write_stdin]
+          block.call(io) if block_given?
+        end
+      end
     end
 
     module DateCalculation
