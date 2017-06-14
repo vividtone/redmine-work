@@ -57,6 +57,7 @@ class Attachment < ActiveRecord::Base
   after_rollback :delete_from_disk, :on => :create
   after_commit :delete_from_disk, :on => :destroy
   after_commit :reuse_existing_file_if_possible, :on => :create
+  after_commit :extract_fulltext, :on => :create
 
   safe_attributes 'filename', 'content_type', 'description'
 
@@ -414,6 +415,15 @@ class Attachment < ActiveRecord::Base
     digest.size < 64 ? "MD5" : "SHA256" if digest.present?
   end
 
+  def extract_fulltext
+    if Redmine::Configuration['enable_fulltext_search'] and
+      readable? and
+      text = Redmine::TextExtractor.new(self).text
+
+      update_column :fulltext, text
+    end
+  end
+
   private
 
   def reuse_existing_file_if_possible
@@ -470,6 +480,16 @@ class Attachment < ActiveRecord::Base
   def target_directory
     time = created_on || DateTime.now
     time.strftime("%Y/%m")
+  end
+
+  def self.extract_fulltext
+    if Redmine::Configuration['enable_fulltext_search']
+      Attachment.where(fulltext: nil).find_in_batches do |group|
+        group.each{|a| a.extract_fulltext}
+      end
+    else
+      logger.info "fulltext search is disabled, check configuration.yml"
+    end
   end
 
   # Returns an ASCII or hashed filename that do not

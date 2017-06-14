@@ -21,6 +21,7 @@ module Redmine
     # Configuration default values
     @defaults = {
       'email_delivery' => nil,
+      'enable_fulltext_search' => true,
       'max_concurrent_ajax_uploads' => 2
     }
 

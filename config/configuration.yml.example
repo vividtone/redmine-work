@@ -212,6 +212,15 @@ default:
   # allowed values: :memory, :file, :memcache
   #openid_authentication_store: :memory
 
+
+  # Enable fulltext extraction and fulltext search in attachments.
+  # To make existing attachments fulltext searchable, run
+  # rake redmine:attachments:extract_fulltext
+  #
+  # Enabled by default.
+  #
+  # enable_fulltext_search: false
+
   # Text extraction helper programs.
   #
   # commands should write the resulting plain text to STDOUT. Use __FILE__ as

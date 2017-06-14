@@ -132,10 +132,15 @@ module Redmine
             end
 
             if searchable_options[:search_attachments] && (options[:titles_only] ? options[:attachments] == 'only' : options[:attachments] != '0')
+              attachment_columns = ["#{Attachment.table_name}.filename", "#{Attachment.table_name}.description"]
+              if Redmine::Configuration['enable_fulltext_search']
+                attachment_columns << "#{Attachment.table_name}.fulltext"
+              end
+
               r |= fetch_ranks_and_ids(
                 search_scope(user, projects, options).
                 joins(:attachments).
-                where(search_tokens_condition(["#{Attachment.table_name}.filename", "#{Attachment.table_name}.description"], tokens, options[:all_words])),
+                where(search_tokens_condition(attachment_columns, tokens, options[:all_words])),
                 options[:limit]
               )
               queries += 1

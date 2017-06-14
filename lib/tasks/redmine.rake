@@ -31,6 +31,11 @@ namespace :redmine do
     task :update_digests => :environment do
       Attachment.update_digests_to_sha256
     end
+
+    desc 'Makes existing attachments fulltext searchable'
+    task :extract_fulltext => :environment do
+      Attachment.extract_fulltext
+    end
   end
 
   namespace :tokens do
