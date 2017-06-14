@@ -212,6 +212,39 @@ default:
   # allowed values: :memory, :file, :memcache
   #openid_authentication_store: :memory
 
+  # Text extraction helper programs.
+  #
+  # commands should write the resulting plain text to STDOUT. Use __FILE__ as
+  # placeholder for the file path. The values below are the defaults.
+  text_extractors:
+    # apt install poppler-utils
+    # pdftotext:
+    #   - /usr/bin/pdftotext
+    #   - -enc
+    #   - UTF-8
+    #   - __FILE__
+    #   - '-'
+
+    # apt install unrtf
+    # unrtf:
+    #   - /usr/bin/unrtf
+    #   - --text
+    #   - __FILE__
+
+    # apt install catdoc
+    # catdoc:
+    #   - /usr/bin/catdoc
+    #   - -dutf-8
+    #   - __FILE__
+    # xls2csv:
+    #   - /usr/bin/xls2csv
+    #   - -dutf-8
+    #   - __FILE__
+    # catppt:
+    #   - /usr/bin/catppt
+    #   - -dutf-8
+    #   - __FILE__
+
 # specific configuration options for production environment
 # that overrides the default ones
 production:

@@ -79,7 +79,12 @@ class AdminController < ApplicationController
       [:text_file_repository_writable, File.writable?(Attachment.storage_path)],
       ["#{l :text_plugin_assets_writable} (./public/plugin_assets)",   File.writable?(Redmine::Plugin.public_directory)],
       [:text_rmagick_available,        Object.const_defined?(:Magick)],
-      [:text_convert_available,        Redmine::Thumbnail.convert_available?]
+      [:text_convert_available,        Redmine::Thumbnail.convert_available?],
+      [:text_pdftotext_available,      Redmine::TextExtractor::PdfHandler.available?],
+      [:text_unrtf_available,          Redmine::TextExtractor::RtfHandler.available?],
+      [:text_catdoc_available,         Redmine::TextExtractor::DocHandler.available?],
+      [:text_xls2csv_available,        Redmine::TextExtractor::XlsHandler.available?],
+      [:text_catppt_available,         Redmine::TextExtractor::PptHandler.available?]
     ]
   end
 end
