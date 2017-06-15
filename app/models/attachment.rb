@@ -415,15 +415,6 @@ class Attachment < ActiveRecord::Base
     digest.size < 64 ? "MD5" : "SHA256" if digest.present?
   end
 
-  def extract_fulltext
-    if Redmine::Configuration['enable_fulltext_search'] and
-      readable? and
-      text = Redmine::TextExtractor.new(self).text
-
-      update_column :fulltext, text
-    end
-  end
-
   private
 
   def reuse_existing_file_if_possible
@@ -482,10 +473,19 @@ class Attachment < ActiveRecord::Base
     time.strftime("%Y/%m")
   end
 
+  def extract_fulltext
+    if Redmine::Configuration['enable_fulltext_search']
+      ExtractFulltextJob.perform_later(id)
+    end
+  end
+
+  # attempts to extract the fulltext of any attachments that do not have a
+  # fulltext set currently. This runs inline, does not enqueue any background
+  # jobs.
   def self.extract_fulltext
     if Redmine::Configuration['enable_fulltext_search']
-      Attachment.where(fulltext: nil).find_in_batches do |group|
-        group.each{|a| a.extract_fulltext}
+      Attachment.where(fulltext: nil).pluck(:id).each do |id|
+        ExtractFulltextJob.perform_now id
       end
     else
       logger.info "fulltext search is disabled, check configuration.yml"
