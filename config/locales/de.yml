@@ -1141,9 +1141,9 @@ de:
   version_status_open: offen
 
   warning_attachments_not_saved: "%{count} Datei(en) konnten nicht gespeichert werden."
-  label_search_attachments_yes: Namen und Beschreibungen von Anhängen durchsuchen
-  label_search_attachments_no: Keine Anhänge suchen
-  label_search_attachments_only: Nur Anhänge suchen
+  label_search_attachments_yes: Auch Anhänge durchsuchen
+  label_search_attachments_no: Keine Anhänge durchsuchen
+  label_search_attachments_only: Nur Anhänge durchsuchen
   label_search_open_issues_only: Nur offene Tickets
   field_address: E-Mail
   setting_max_additional_emails: Maximale Anzahl zusätzlicher E-Mailadressen
