@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -1434,6 +1434,23 @@ class IssueTest < ActiveSupport::TestCase
     # 2 and 3 should be also closed
     assert issue2.reload.closed?
     assert issue3.reload.closed?
+  end
+
+  def test_should_not_close_duplicate_when_disabled
+    issue = Issue.generate!
+    duplicate = Issue.generate!
+
+    IssueRelation.create!(:issue_from => duplicate, :issue_to => issue,
+                          :relation_type => IssueRelation::TYPE_DUPLICATES)
+    assert issue.reload.duplicates.include?(duplicate)
+
+    with_settings :close_duplicate_issues => '0' do
+      issue.init_journal(User.first, "Closing issue")
+      issue.status = IssueStatus.where(:is_closed => true).first
+      issue.save
+    end
+
+    assert !duplicate.reload.closed?
   end
 
   def test_should_close_duplicates_with_private_notes

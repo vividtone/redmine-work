@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -1798,7 +1798,7 @@ class Issue < ActiveRecord::Base
 
   # Closes duplicates if the issue is being closed
   def close_duplicates
-    if closing?
+    if Setting.close_duplicate_issues? && closing?
       duplicates.each do |duplicate|
         # Reload is needed in case the duplicate was updated by a previous duplicate
         duplicate.reload

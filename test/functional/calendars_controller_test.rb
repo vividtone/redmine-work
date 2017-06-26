@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -36,6 +36,17 @@ class CalendarsControllerTest < Redmine::ControllerTest
         :project_id => 1
       }
     assert_response :success
+
+    # query form
+    assert_select 'form#query_form' do
+      assert_select 'div#query_form_with_buttons.hide-when-print' do
+        assert_select 'div#query_form_content' do
+          assert_select 'fieldset#filters.collapsible'
+        end
+        assert_select 'p.contextual'
+        assert_select 'p.buttons'
+      end
+    end
   end
 
   def test_show_should_run_custom_queries

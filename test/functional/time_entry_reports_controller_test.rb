@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -37,6 +37,18 @@ class TimeEntryReportsControllerTest < Redmine::ControllerTest
   def test_report_at_project_level
     get :report, :params => {:project_id => 'ecookbook'}
     assert_response :success
+
+    # query form
+    assert_select 'form#query_form' do
+      assert_select 'div#query_form_with_buttons.hide-when-print' do
+        assert_select 'div#query_form_content' do
+          assert_select 'fieldset#filters.collapsible'
+          assert_select 'fieldset#options'
+        end
+        assert_select 'p.buttons'
+      end
+    end
+
     assert_select 'form#query_form[action=?]', '/projects/ecookbook/time_entries/report'
   end
 

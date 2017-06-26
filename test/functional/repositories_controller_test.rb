@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -345,7 +345,11 @@ class RepositoriesControllerTest < Redmine::ControllerTest
         :graph => 'commits_per_month'
       }
     assert_response :success
-    assert_equal 'image/svg+xml', @response.content_type
+    assert_equal 'application/json', response.content_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_not_nil data['labels']
+    assert_not_nil data['commits']
+    assert_not_nil data['changes']
   end
 
   def test_graph_commits_per_author
@@ -354,7 +358,11 @@ class RepositoriesControllerTest < Redmine::ControllerTest
         :graph => 'commits_per_author'
       }
     assert_response :success
-    assert_equal 'image/svg+xml', @response.content_type
+    assert_equal 'application/json', response.content_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_not_nil data['labels']
+    assert_not_nil data['commits']
+    assert_not_nil data['changes']
   end
 
   def test_get_committers

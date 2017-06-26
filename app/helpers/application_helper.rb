@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 # Redmine - project management software
-# Copyright (C) 2006-2016  Jean-Philippe Lang
+# Copyright (C) 2006-2017  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -377,7 +377,10 @@ module ApplicationHelper
   # Renders the project quick-jump box
   def render_project_jump_box
     projects = projects_for_jump_box(User.current)
-    text = @project.try(:name) || l(:label_jump_to_a_project)
+    if @project && @project.persisted?
+      text = @project.name_was
+    end
+    text ||= l(:label_jump_to_a_project)
     url = autocomplete_projects_path(:format => 'js', :jump => current_menu_item)
 
     trigger = content_tag('span', text, :class => 'drdn-trigger')
@@ -813,12 +816,20 @@ module ApplicationHelper
   #     source:some/file#L120 -> Link to line 120 of the file
   #     source:some/file@52#L120 -> Link to line 120 of the file's revision 52
   #     export:some/file -> Force the download of the file
+  #   Forums:
+  #     forum#1 -> Link to forum with id 1
+  #     forum:Support -> Link to forum named "Support"
+  #     forum:"Technical Support" -> Link to forum named "Technical Support"
   #   Forum messages:
   #     message#1218 -> Link to message with id 1218
-  #  Projects:
+  #   Projects:
   #     project:someproject -> Link to project named "someproject"
   #     project#3 -> Link to project with id 3
-  #  Users:
+  #   News:
+  #     news#2 -> Link to news item with id 1
+  #     news:Greetings -> Link to news item named "Greetings"
+  #     news:"First Release" -> Link to news item named "First Release"
+  #   Users:
   #     user:jsmith -> Link to user with login jsmith
   #     @jsmith -> Link to user with login jsmith
   #     user#2 -> Link to user with id 2
