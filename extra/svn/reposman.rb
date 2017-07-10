@@ -6,7 +6,7 @@ require 'etc'
 require 'rubygems'
 
 Version = "1.5"
-SUPPORTED_SCM = %w( Subversion Darcs Mercurial Bazaar Git Filesystem )
+SUPPORTED_SCM = %w( Subversion Mercurial Bazaar Git Filesystem )
 
 $verbose      = 0
 $quiet        = false
@@ -71,7 +71,7 @@ optparse = OptionParser.new do |opts|
   opts.separator("")
   opts.separator("Manages your repositories with Redmine.")
   opts.separator("")
-  opts.separator("Required arguments:") 
+  opts.separator("Required arguments:")
   opts.on("-s", "--svn-dir DIR",      "use DIR as base directory for svn repositories") {|v| $repos_base = v}
   opts.on("-r", "--redmine-host HOST","assume Redmine is hosted on HOST. Examples:",
                                        " -r redmine.example.net",
@@ -81,7 +81,7 @@ optparse = OptionParser.new do |opts|
                                        "(you can use --key-file option as an alternative)") {|v| $api_key = v}
   opts.separator("")
   opts.separator("Options:")
-  opts.on("-o", "--owner OWNER",       "owner of the repository. using the rails login", 
+  opts.on("-o", "--owner OWNER",       "owner of the repository. using the rails login",
                                        "allows users to browse the repository within",
                                        "Redmine even for private projects. If you want to",
                                        "share repositories through Redmine.pm, you need",
@@ -109,7 +109,7 @@ optparse = OptionParser.new do |opts|
                                        "This command override the default creation for",
                                        "git and subversion.") {|v| $command = v}
   opts.on(      "--key-file FILE",     "path to a file that contains the Redmine API key",
-                                       "(use this option instead of --key if you don't", 
+                                       "(use this option instead of --key if you don't",
                                        "want the key to appear in the command line)") {|v| read_key_from_file(v)}
   opts.on("-t", "--test",              "only show what should be done") {$test = true}
   opts.on("-f", "--force",             "force repository creation even if the project", "repository is already declared in Redmine") {$force = true}

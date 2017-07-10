@@ -221,7 +221,7 @@ class RepositoryTest < ActiveSupport::TestCase
 
   def test_should_not_create_with_disabled_scm
     # disable Subversion
-    with_settings :enabled_scm => ['Darcs', 'Git'] do
+    with_settings :enabled_scm => ['Mercurial', 'Git'] do
       repository = Repository::Subversion.new(
                       :project => Project.find(3), :url => "svn://localhost")
       assert !repository.save
@@ -280,9 +280,9 @@ class RepositoryTest < ActiveSupport::TestCase
                     :project => Project.find( 4 ),
                     :url => '/foo/bar/baz' )
     comment = <<-COMMENT
-    This is a loooooooooooooooooooooooooooong comment                                                   
-                                                                                                       
-                                                                                            
+    This is a loooooooooooooooooooooooooooong comment
+
+
     COMMENT
     changeset = Changeset.new(
       :comments => comment, :commit_date => Time.now,
